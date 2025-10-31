@@ -1,0 +1,5 @@
+I will become a successful backend developer
+
+File text read from input.txt: input file: I'm learning Node.js in depth with this awesome course.
+                        
+Date created: Tue Oct 28 2025 19:21:40 GMT-0400 (Atlantic Standard Time)
