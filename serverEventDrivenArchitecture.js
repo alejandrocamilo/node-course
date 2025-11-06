@@ -1,13 +1,14 @@
-
 //Core modules
 
 const http = require('http');
 const fs = require('fs');
 const  url = require('url');
+const events = require('events');
 
 //User defined modules
 
 const replaceHtml = require('./Modules/replaceHtml')
+const User = require("./Modules/user");
 
 // Third party modules
 
@@ -37,7 +38,14 @@ const productsDetailsTemplate = fs.readFileSync('./Template/product-details.html
 //     return output;
 // }
 
-const server = http.createServer((request, response) => {
+
+
+// Event-Driven Architecture in action!
+//This server object inherits from the Node.js Event Emitter Class
+
+const server = http.createServer();
+
+server.on('request', (request, response) => {
     console.log("A new request has been started!");
 
     let {query, pathname: path} = url.parse(request.url, true);
@@ -72,8 +80,8 @@ const server = http.createServer((request, response) => {
 
         if(!query.id){
 
-           const productsListArray = products.map(product => {
-               return replaceHtml(productsListTemplate, product)
+            const productsListArray = products.map(product => {
+                return replaceHtml(productsListTemplate, product)
             })
             response.writeHead(200, {
                 'Content-Type': 'text/html',
@@ -103,37 +111,20 @@ const server = http.createServer((request, response) => {
 })
 
 
+const myEmitter = new User();
+
+myEmitter.on('userCreated', (id, name) => {
+    console.log(`A new user ${name} with id ${id} has been created `);
+})
+
+myEmitter.on('userCreated', (id, name) => {
+    console.log(`A new user ${name} with id ${id} has been stored in database`);
+})
+
+myEmitter.emit('userCreated', 15, 'Antonio');
+
 server.listen(8000, '127.0.0.1', ()=>{
     console.log("Server listening on port 8000!");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
